@@ -1,0 +1,156 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Oda belge ID'si = 8 karakter büyük harf/ rakam oda kodu (join doğrudan get ile).
+    function validFocusRoomId(roomId) {
+      return roomId is string
+        && roomId.size() == 8
+        && roomId.matches('^[A-Z0-9]{8}$');
+    }
+
+    function roomPath(roomId) {
+      return /databases/$(database)/documents/focus_rooms/$(roomId);
+    }
+
+    function roomDoc(roomId) {
+      return get(roomPath(roomId)).data;
+    }
+
+    function isRoomMember(roomId) {
+      return signedIn()
+        && validFocusRoomId(roomId)
+        && exists(
+          /databases/$(database)/documents/focus_rooms/$(roomId)
+            /participants/$(request.auth.uid));
+    }
+
+    function validDuration(d) {
+      return d is int && d >= 5 && d <= 180;
+    }
+
+    function validUserBackup() {
+      let d = request.resource.data;
+      return d.keys().hasOnly([
+        'currentStreak', 'longestStreak', 'totalSessions', 'totalMinutes',
+        'dopamineScore', 'lastSessionDate', 'togetherTotal', 'syncedAt'
+      ])
+        && d.currentStreak is int && d.currentStreak >= 0 && d.currentStreak <= 50000
+        && d.longestStreak is int && d.longestStreak >= 0 && d.longestStreak <= 50000
+        && d.totalSessions is int && d.totalSessions >= 0 && d.totalSessions <= 1000000
+        && d.totalMinutes is int && d.totalMinutes >= 0 && d.totalMinutes <= 100000000
+        && d.dopamineScore is int && d.dopamineScore >= 0 && d.dopamineScore <= 1000
+        && d.togetherTotal is int && d.togetherTotal >= 0 && d.togetherTotal <= 1000000
+        && d.syncedAt == request.time
+        && (
+          !('lastSessionDate' in d) || d.lastSessionDate == null
+          || (
+            d.lastSessionDate is string
+            && d.lastSessionDate.size() == 10
+            && d.lastSessionDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          )
+        );
+    }
+
+    match /focus_rooms/{roomId} {
+      // Sadece bilinen oda kodu (belge yolu) ile tekil get — koleksiyon taraması yok.
+      allow get: if signedIn() && validFocusRoomId(roomId);
+      allow list: if false;
+
+      allow create: if signedIn()
+        && validFocusRoomId(roomId)
+        && request.resource.data.keys().hasOnly([
+          'code', 'name', 'durationMinutes', 'phase', 'hostUserId',
+          'sessionEndsAt', 'createdAt'
+        ])
+        && request.resource.data.code == roomId
+        && request.resource.data.hostUserId == request.auth.uid
+        && request.resource.data.phase == 'lobby'
+        && request.resource.data.code is string
+        && request.resource.data.code.size() == 8
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 40
+        && validDuration(request.resource.data.durationMinutes)
+        && request.resource.data.sessionEndsAt == null
+        && request.resource.data.createdAt == request.time;
+
+      allow update: if signedIn()
+        && validFocusRoomId(roomId)
+        && (
+          resource.data.hostUserId == request.auth.uid
+          || (
+            isRoomMember(roomId)
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['phase', 'sessionEndsAt'])
+            && request.resource.data.phase == 'ended'
+          )
+        );
+
+      allow delete: if signedIn()
+        && validFocusRoomId(roomId)
+        && resource.data.hostUserId == request.auth.uid;
+
+      match /participants/{userId} {
+        // Üyeler: tam okuma. Katılım öncesi: sadece kendi uid yoluna get (var mı diye).
+        allow get: if signedIn()
+          && validFocusRoomId(roomId)
+          && (isRoomMember(roomId) || userId == request.auth.uid);
+
+        allow list: if signedIn()
+          && validFocusRoomId(roomId)
+          && isRoomMember(roomId);
+
+        allow create: if signedIn()
+          && validFocusRoomId(roomId)
+          && userId == request.auth.uid
+          && request.resource.data.keys().hasAll(
+               ['displayName', 'isHost', 'presence', 'isSimulated'])
+          && request.resource.data.keys().hasOnly(
+               ['displayName', 'isHost', 'presence', 'isSimulated'])
+          && request.resource.data.displayName is string
+          && request.resource.data.displayName.size() >= 1
+          && request.resource.data.displayName.size() <= 20
+          && request.resource.data.isHost is bool
+          && request.resource.data.isSimulated == false
+          && exists(roomPath(roomId));
+
+        allow update: if signedIn()
+          && validFocusRoomId(roomId)
+          && (
+            userId == request.auth.uid
+            || roomDoc(roomId).hostUserId == request.auth.uid
+            || (
+              isRoomMember(roomId)
+              && request.resource.data.diff(resource.data).affectedKeys()
+                   .hasOnly(['presence'])
+            )
+          );
+
+        allow delete: if signedIn()
+          && validFocusRoomId(roomId)
+          && (
+            userId == request.auth.uid
+            || roomDoc(roomId).hostUserId == request.auth.uid
+          );
+      }
+    }
+
+    match /users/{userId} {
+      allow get: if signedIn() && userId == request.auth.uid;
+      allow create, update: if signedIn()
+        && userId == request.auth.uid
+        && validUserBackup();
+      allow list: if false;
+      allow delete: if signedIn() && userId == request.auth.uid;
+    }
+
+    match /app_config/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

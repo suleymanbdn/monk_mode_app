@@ -1,0 +1,492 @@
+{
+  "@@locale": "en",
+  "appTitle": "MONK MODE",
+  "appSubtitle": "DOPAMINE DETOX",
+  "taglineSessionsZero": "Your detox starts now.",
+  "taglineStreakZero": "Rebuild your streak today.",
+  "taglineStreakLt3": "Keep the momentum going.",
+  "taglineStreakLt7": "Your focus is sharpening.",
+  "taglineStreakGe7": "You are in control.",
+  "dopamineScoreTitle": "DOPAMINE SCORE",
+  "dopamineLabel0": "Start your first session.",
+  "dopamineLabel20": "Your detox journey has begun.",
+  "dopamineLabel45": "Building mental resistance.",
+  "dopamineLabel70": "Your clarity is growing.",
+  "dopamineLabel90": "Strong focus and discipline.",
+  "dopamineLabel100": "Peak mental clarity achieved.",
+  "dayStreakSuffix": "day streak",
+  "bestStreak": "Best: {days} days",
+  "@bestStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "todayLabel": "TODAY",
+  "focusTimeStatLabel": "Focus time",
+  "sessionsDoneStatLabel": "Sessions done",
+  "heroTitle": "Enter Monk Mode.",
+  "startMonkMode": "START MONK MODE",
+  "focusTogether": "FOCUS TOGETHER",
+  "circleJourneySection": "CIRCLE JOURNEY",
+  "settingsTooltip": "Settings",
+  "statsTooltip": "Statistics",
+  "joinRoomNotFoundCloud": "No open lobby for that code, or the host already started or left.",
+  "joinRoomNotFoundLocal": "No lobby here. Create a room on this phone, then join with that code.",
+  "joinRoomNetworkError": "Could not reach the server. Check your connection and try again.",
+  "resetDataMessage": "This removes your streak, score, stats, session history, session length chips, and Focus Together name on this device. If you use cloud rooms, you will get a new anonymous account. This cannot be undone.",
+  "settingsTitle": "SETTINGS",
+  "settingsFocus": "FOCUS",
+  "settingsLegal": "LEGAL",
+  "settingsData": "DATA",
+  "settingsResetCleared": "All local data has been cleared.",
+  "settingsLanguage": "LANGUAGE",
+  "languageEnglishName": "English",
+  "languageTurkishName": "Türkçe",
+  "languagePickerSubtitle": "Optional — default is English.",
+  "updateScreenAppBar": "UPDATE",
+  "updateAvailableTitle": "Update available",
+  "updateRequiredTitle": "Update required",
+  "updateAvailableBody": "A newer version of Monk Mode is on the store. Update to get the latest fixes and improvements.",
+  "updateRequiredBody": "This version is no longer supported. Install the latest Monk Mode from the store to continue.",
+  "updateInstalledVersion": "Installed: {version}",
+  "@updateInstalledVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateStoreVersion": "Store: {version}",
+  "@updateStoreVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateOpenStore": "UPDATE IN STORE",
+  "updateNotNow": "NOT NOW",
+  "updateStoreOpenFailed": "Could not open the store. Try again or open the app page manually.",
+  "updateVersionStatusTitle": "VERSIONS",
+  "updateYouAreOn": "On this device",
+  "updateLatestIs": "Latest on store",
+  "updateBadgeRequired": "REQUIRED",
+  "updateBadgeRecommended": "RECOMMENDED",
+  "updateReleaseNotesTitle": "DETAILS",
+  "updateOpenStoreHint": "Opens Google Play or the App Store so you can install the update.",
+  "updateTapToOpenStore": "Tap anywhere to open the store and install the update.",
+  "settingsCheckForUpdates": "Check for updates",
+  "settingsCheckForUpdatesSubtitle": "See if a newer version is on the store",
+  "settingsAppUpToDate": "You are on the latest version.",
+  "settingsSessionChipsTitle": "Session length chips",
+  "settingsPrivacyTitle": "Privacy policy",
+  "settingsPrivacySubtitle": "How we handle your data",
+  "settingsResetTitle": "Reset all data",
+  "settingsResetSubtitle": "Clear stats and history on this device",
+  "settingsLinkOpenFailed": "Could not open the link.",
+  "resetDialogTitle": "Reset all data?",
+  "resetDialogCancel": "CANCEL",
+  "resetDialogConfirm": "RESET",
+  "durationPresetsTitle": "FOCUS LENGTHS",
+  "durationPresetsIntro": "Pick three options for the timer screen. They must all be different.",
+  "durationPresetsFirst": "FIRST CHIP",
+  "durationPresetsSecond": "SECOND CHIP",
+  "durationPresetsThird": "THIRD CHIP",
+  "durationPresetsSave": "SAVE",
+  "durationPresetsDistinctError": "Choose three different lengths.",
+  "durationMinutesShort": "{minutes} min",
+  "@durationMinutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationHoursShort": "{hours} h",
+  "@durationHoursShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "durationHoursMinutesShort": "{hours} h {minutes} min",
+  "@durationHoursMinutesShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationZeroCompact": "0m",
+  "statsTitle": "STATS",
+  "statsYourStats": "YOUR STATS",
+  "statsStreakJourney": "STREAK JOURNEY",
+  "statsOutOf100": "/ 100",
+  "statsCurrentStreak": "Current Streak",
+  "statsCompleted": "Completed",
+  "statsTotalFocus": "Total Focus",
+  "statsBestStreak": "Best Streak",
+  "statsUnitDay": "day",
+  "statsUnitDays": "days",
+  "statsUnitSession": "session",
+  "statsUnitSessions": "sessions",
+  "statsLastSession": "Last session: {date}",
+  "@statsLastSession": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "statsSessionHistoryTitle": "Session history",
+  "statsSessionHistorySubtitle": "See every completed focus session",
+  "statsEmptyTitle": "No sessions yet",
+  "statsEmptyBody": "Complete your first Monk Mode session\nto see your stats here.",
+  "statsMilestoneBeyond": "Beyond 30 days — legendary!",
+  "statsMilestoneOneDayTo": "1 day to {next}-day milestone",
+  "@statsMilestoneOneDayTo": {
+    "placeholders": {
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "statsMilestoneDaysTo": "{days} days to {next}-day milestone",
+  "@statsMilestoneDaysTo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "historyTitle": "SESSION HISTORY",
+  "historyEmptyTitle": "No sessions yet",
+  "historyEmptyBody": "Complete a Monk Mode session to build your history here.",
+  "historyRowDetail": "{duration} focus · {time}",
+  "@historyRowDetail": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "monkLeaveTitle": "Leave session?",
+  "monkLeaveBody": "Your timer is still running. If you leave now, progress will be lost.",
+  "monkKeepGoing": "KEEP GOING",
+  "monkLeaveAction": "LEAVE",
+  "monkAppBarTitle": "MONK MODE",
+  "monkBackHome": "BACK TO HOME",
+  "monkReady": "READY",
+  "monkFocus": "FOCUS",
+  "monkPaused": "PAUSED",
+  "monkDone": "DONE",
+  "monkSelectDuration": "SELECT DURATION",
+  "monkTestMode": "TEST MODE",
+  "monkStartSession": "START SESSION",
+  "monkReset": "RESET",
+  "monkPause": "PAUSE",
+  "monkResume": "RESUME",
+  "monkBgPauseSnackbar": "Focus pauses when you leave the app. Tap RESUME to continue.",
+  "monkStayAwakeHint": "Screen stays on during focus so auto-lock won’t pause your session. Switching apps still pauses.",
+  "monkCompleteTitle": "Session Complete",
+  "monkCompleteSubtitle": "Great focus. Keep it up.",
+  "monkShareResult": "SHARE RESULT",
+  "monkShareSubject": "My Monk Mode Session",
+  "monkShareStatDuration": "DURATION",
+  "monkShareStatStreak": "STREAK",
+  "monkShareStatScore": "SCORE",
+  "monkShareTagline": "\"Focus like a monk\"",
+  "monkShareStreakNew": "New start",
+  "monkShareStreakOne": "1 day",
+  "monkShareStreakMany": "{days} days",
+  "@monkShareStreakMany": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "ftHubTitle": "FOCUS TOGETHER",
+  "ftHubHeadline": "Focus together",
+  "ftHubBodyOnline": "One shared timer. Share the code; friends join before the host starts.",
+  "ftHubBodyOffline": "One timer per room on this device. Add Firebase to sync with other phones.",
+  "ftYourNameHeader": "YOUR NAME IN ROOMS",
+  "ftNameFieldHint": "e.g. Alex",
+  "ftNameHelp": "Everyone sees this in the list. Each phone also gets a short tag (#AB12) so two similar names stay distinct.",
+  "ftSaveName": "SAVE NAME",
+  "ftStartHere": "START HERE",
+  "ftCreateRoomTitle": "Create a room",
+  "ftCreateRoomSubtitle": "You are the host—set length and share the code",
+  "ftJoinRoomTitle": "Join with code",
+  "ftJoinRoomSubtitleOnline": "Enter the code from your host",
+  "ftJoinRoomSubtitleOffline": "Same phone as the host until Firebase is on",
+  "ftErrorNameEmpty": "Enter a name your friends will recognize.",
+  "ftNameSavedSnackbar": "Saved. Others will see this name in the room.",
+  "ftJoinAppBar": "JOIN ROOM",
+  "ftJoinEnterCode": "Enter the code",
+  "ftJoinCodeHelp": "Usually 8 characters; not case-sensitive.",
+  "ftJoinCodeSection": "ROOM CODE",
+  "ftJoinMinChars": "Enter at least 4 characters.",
+  "ftJoinLobby": "JOIN LOBBY",
+  "ftJoinTypingHint": "Keep typing—codes are usually 8 characters.",
+  "ftCreateAppBar": "NEW ROOM",
+  "ftCreateDurationQuestion": "How long is the block?",
+  "ftCreateDurationHelp": "Everyone sees the same length once you start. You can still leave the lobby anytime.",
+  "ftNameOptionalSection": "NAME (OPTIONAL)",
+  "ftRoomNameHint": "e.g. Deep work · Sunday",
+  "ftCreateOpenLobby": "CREATE & OPEN LOBBY",
+  "ftLobbyTitle": "LOBBY",
+  "ftLobbyEmptyTitle": "No active lobby",
+  "ftLobbyEmptyBody": "Room closed or reset. Go back to the hub to create or join again.",
+  "ftBackToHub": "BACK TO HUB",
+  "ftDefaultRoomTitle": "Your focus room",
+  "ftLobbyShareOnline": "Share the code below so others can join from their phone.",
+  "ftLobbyShareOffline": "This code only works on this phone.",
+  "ftLobbyGuestWait": "Wait for the host to start. Tap ready when you are set.",
+  "ftInThisRoom": "IN THIS ROOM",
+  "ftStartFocusTimer": "START FOCUS TIMER",
+  "ftImReady": "I'M READY",
+  "ftSetToWaiting": "SET TO WAITING",
+  "ftLeaveLobby": "LEAVE LOBBY",
+  "ftPhaseLobby": "Waiting",
+  "ftPhaseRunning": "Live",
+  "ftPhaseEnded": "Ended",
+  "ftSessionBlockSuffix": "block",
+  "ftLobbyHereCount": "{count} here",
+  "@ftLobbyHereCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ftLobbyMetaMiddle": " · ",
+  "ftInSessionTitle": "IN SESSION",
+  "ftEndSessionAction": "END",
+  "ftSharedFocusDefaultName": "Shared focus",
+  "ftInRoomCount": "{count} in this room",
+  "@ftInRoomCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ftTimerFocusLabel": "FOCUS",
+  "ftTogetherSection": "TOGETHER",
+  "ftSessionSyncOnline": "Same end time for everyone; updates sync from the room.",
+  "ftSessionSyncOffline": "Timer is only on this device.",
+  "ftSessionUpdating": "Updating…",
+  "ftBgSessionPausedSnackbar": "Timer was paused while the app was in the background. Remaining time is synced with the room.",
+  "ftStayAwakeHint": "Screen stays on during the session so auto-lock won’t freeze your timer. Leaving the app still pauses locally until you return.",
+  "ftRoomCodeLabel": "ROOM CODE",
+  "ftCodeCopied": "Code copied",
+  "frCrossHubTitleOn": "Synced rooms",
+  "frCrossHubTitleOff": "This device only",
+  "frCrossJoinTitleOn": "Join from another phone",
+  "frCrossJoinTitleOff": "Offline mode",
+  "frCrossLobbyTitleOn": "Share this code",
+  "frCrossLobbyTitleOff": "This code",
+  "frCrossHubBodyOn": "Create a room, share the 8-character code, and friends open Focus Together → Join while the lobby is open.",
+  "frCrossHubBodyOff": "Cloud sync is off, so rooms exist only on this phone. Configure Firebase to play across devices.",
+  "frCrossJoinBodyOn": "Code must match (letters/numbers; case does not matter). It stops working if the host already started or left.",
+  "frCrossJoinBodyOff": "Only a room created on this same phone can be opened here.",
+  "frCrossLobbyBodyOn": "When everyone is in, tap Start focus timer. If someone cannot join, check the code and that you are still in the lobby.",
+  "frCrossLobbyBodyOff": "This code only works on this phone until Firebase is configured.",
+  "ftLeaveSessionTitle": "Leave this session?",
+  "ftLeaveSessionBody": "The timer will stop for you and this room will close on your device. In a live app, others could keep going—here it ends for everyone in mock mode.",
+  "ftKeepFocusing": "KEEP FOCUSING",
+  "ftEndSessionSheet": "END SESSION",
+  "ftCircleHeadlineAllBadges": "Every circle badge unlocked",
+  "ftCircleHeadlineKeepFinishing": "Keep finishing together",
+  "ftCircleHeadlineNextReady": "Next badge ready",
+  "ftCircleOneSessionToBadge": "1 session to {badge}",
+  "@ftCircleOneSessionToBadge": {
+    "placeholders": {
+      "badge": {
+        "type": "String"
+      }
+    }
+  },
+  "ftCircleSessionsToBadge": "{count} sessions to {badge}",
+  "@ftCircleSessionsToBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "badge": {
+        "type": "String"
+      }
+    }
+  },
+  "ftCircleSublineAllDone": "Come back with your group whenever you want — the ritual is yours.",
+  "ftCircleSublineStart": "Finish a full session with others to start your circle journey.",
+  "ftBadgeAt1": "First light",
+  "ftBadgeAt3": "Momentum",
+  "ftBadgeAt5": "Squad rhythm",
+  "ftBadgeAt10": "Circle strength",
+  "ftBadgeAt15": "Deep bench",
+  "ftBadgeAt25": "Focus anchor",
+  "ftBadgeAt50": "Circle legend",
+  "ftChaseAt1": "Your first circle badge is one natural finish away.",
+  "ftChaseAt3": "Three finishes is where a group habit usually sticks.",
+  "ftChaseAt5": "Five sessions is when shared focus starts to feel normal.",
+  "ftChaseAt10": "Double digits is worth protecting — one room at a time.",
+  "ftChaseAt15": "You are past the novelty phase — keep the ritual alive.",
+  "ftChaseAt25": "The anchor badge is for groups that do not quit.",
+  "ftChaseAt50": "After this, the win is the habit itself.",
+  "ftFooterFinishesOne": "1 natural finish logged",
+  "ftFooterFinishesMany": "{count} natural finishes logged",
+  "@ftFooterFinishesMany": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ftFooterAllDone": "{count} natural finishes — keep the ritual with your circle.",
+  "@ftFooterAllDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryAppBarEarly": "WRAP-UP",
+  "summaryAppBarDone": "DONE",
+  "summaryHeadlineEarly": "You stepped away",
+  "summaryHeadlineDone": "Session complete",
+  "summarySubEarly": "The room closed when you ended early.",
+  "summarySubNatural": "Nice work staying in flow together.",
+  "summaryEndedAt": "Ended at {time}",
+  "@summaryEndedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryDefaultRoom": "Focus room",
+  "summaryCompleted": "COMPLETED",
+  "summaryDidNotFinish": "DID NOT FINISH",
+  "summaryCompletedEmptyTitle": "No one is listed as completed for this run.",
+  "summaryCompletedEmptySubtitle": "That can happen if the session ended early.",
+  "summaryBackMonk": "BACK TO MONK MODE",
+  "summaryFocusAgain": "FOCUS TOGETHER AGAIN",
+  "summaryRewardsNatural": "Monk Mode rewards",
+  "summaryRewardsEarly": "Small recovery bonus",
+  "summaryStreakLineOne": "1 day streak · counts like a solo session",
+  "summaryStreakLineMany": "{days} days streak · counts like a solo session",
+  "@summaryStreakLineMany": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryClarityLine": "Clarity +{delta} total ({focus} focus)",
+  "@summaryClarityLine": {
+    "placeholders": {
+      "delta": {
+        "type": "int"
+      },
+      "focus": {
+        "type": "String"
+      }
+    }
+  },
+  "summarySquadBonus": "+{bonus} squad bonus for finishing alongside others.",
+  "@summarySquadBonus": {
+    "placeholders": {
+      "bonus": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryClarityNow": "Clarity now at {score}",
+  "@summaryClarityNow": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryEarlyClarityLine": "Clarity +{delta} (streak unchanged)",
+  "@summaryEarlyClarityLine": {
+    "placeholders": {
+      "delta": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryEarlyHint": "Finish a full session with the group to move your streak and earn the big clarity gains.",
+  "summaryNextReturn": "NEXT REASON TO RETURN",
+  "ftMil1Title": "First light",
+  "ftMil1Sub": "You finished a full session with others. That is the hardest step.",
+  "ftMil3Title": "Momentum",
+  "ftMil3Sub": "Three shared finishes — your group is turning focus into a habit.",
+  "ftMil5Title": "Squad rhythm",
+  "ftMil5Sub": "Five times you all stayed until the end. Consistency beats intensity.",
+  "ftMil10Title": "Circle strength",
+  "ftMil10Sub": "Ten shared wins. Most people never stack this — you are building something real.",
+  "ftMil15Title": "Deep bench",
+  "ftMil15Sub": "Fifteen natural finishes. Your circle shows up when it counts.",
+  "ftMil25Title": "Focus anchor",
+  "ftMil25Sub": "Twenty-five shared sessions. That is discipline most people never stack.",
+  "ftMil50Title": "Circle legend",
+  "ftMil50Sub": "Fifty natural finishes together. Save this screen — you earned it.",
+  "settingsBackup": "GOOGLE",
+  "backupSignInTitle": "Sign in with Google",
+  "backupSignInSubtitle": "Link your Google account to back up streak and stats in the cloud (restore after reinstall)",
+  "backupSignedInTitle": "Google backup active",
+  "backupSignedInSubtitle": "Synced as {email}",
+  "@backupSignedInSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "backupSyncNow": "SYNC NOW",
+  "backupSignOut": "Sign out of backup",
+  "backupSignOutSubtitle": "Stats stay on this device",
+  "backupSignInFailed": "Could not sign in with Google. Please try again.",
+  "backupSignInDialogOk": "OK",
+  "backupSignInDialogDeveloperTitle": "Google sign-in (Android setup)",
+  "backupSignInDialogDeveloperBody": "Google blocked sign-in because the certificate that signed this install is not registered in Firebase.\n\nIf you installed from Google Play: Play Console → your app → Release (or Testing) → App integrity → App signing. Copy SHA-1 under App signing key certificate (not the upload key). In Firebase: Project settings → your Android app → Add fingerprint. Then download google-services.json again, replace android/app/google-services.json, and publish a new release.\n\nIf you use a local debug or release APK, add the SHA-1 from android/ gradlew signingReport (Variant: debug or release) instead.",
+  "backupSignInDialogTokenTitle": "Google sign-in (token)",
+  "backupSignInDialogTokenBody": "The app could not get an ID token from Google. In Firebase Console, re-download google-services.json after your SHA-1 fingerprints are added, and confirm lib/config/backup_sign_in_config.dart has the Web client ID (type 3 in json). Then create a new release build.",
+  "backupSynced": "Stats backed up to Google.",
+  "backupSyncFailed": "Backup failed. Check your connection.",
+  "backupRestoreTitle": "Restore from cloud?",
+  "backupRestoreBody": "Your Google backup has {sessions} sessions and a {streak}-day streak. Restore it to this device? Current local data will be replaced.",
+  "@backupRestoreBody": {
+    "placeholders": {
+      "sessions": {
+        "type": "int"
+      },
+      "streak": {
+        "type": "int"
+      }
+    }
+  },
+  "backupRestoreConfirm": "RESTORE",
+  "backupRestoreCancel": "KEEP LOCAL",
+  "backupRestored": "Stats restored from your Google backup.",
+  "backupSignOutConfirmTitle": "Sign out of backup?",
+  "backupSignOutConfirmBody": "Your stats stay on this device but will no longer sync to Google.",
+  "backupSignOutConfirm": "SIGN OUT",
+  "backupSignOutCancel": "CANCEL"
+}
