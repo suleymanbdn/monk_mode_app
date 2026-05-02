@@ -38,6 +38,7 @@ class AppColors {
   // Borders & dividers
   static const outline = Color(0xFF2E2E2E);
   static const outlineVariant = Color(0xFF1E1E1E);
+  static const borderSubtle = Color(0x14FFFFFF); // rgba(255,255,255,0.08)
 }
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
@@ -282,6 +283,16 @@ class AppTheme {
       iconTheme: const IconThemeData(
         color: AppColors.onSurfaceVariant,
         size: 22,
+      ),
+
+      // ── SnackBar ───────────────────────────────────────────────────────────
+      snackBarTheme: const SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        backgroundColor: AppColors.surfaceContainerHighest,
       ),
 
       // ── Page transitions ───────────────────────────────────────────────────

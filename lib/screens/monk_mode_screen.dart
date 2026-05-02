@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -129,9 +130,8 @@ class _MonkModeScreenState extends State<MonkModeScreen>
   // ── Timer logic ────────────────────────────────────────────────────────────
 
   void _onStart() {
-    // Cancel any existing ticker before creating a new one.
-    // Prevents two timers from running simultaneously on rapid resume taps.
     _ticker?.cancel();
+    HapticFeedback.mediumImpact();
     setState(() => _status = TimerStatus.running);
     _syncWakeLockWithTimerState();
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -148,6 +148,7 @@ class _MonkModeScreenState extends State<MonkModeScreen>
 
   void _onPause() {
     _ticker?.cancel();
+    HapticFeedback.lightImpact();
     setState(() => _status = TimerStatus.paused);
     _syncWakeLockWithTimerState();
   }
@@ -169,6 +170,7 @@ class _MonkModeScreenState extends State<MonkModeScreen>
 
   Future<void> _onComplete() async {
     _ticker?.cancel();
+    HapticFeedback.heavyImpact();
     setState(() {
       _remainingSeconds = 0;
       _status = TimerStatus.done;

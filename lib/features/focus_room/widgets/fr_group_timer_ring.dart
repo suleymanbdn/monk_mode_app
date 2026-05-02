@@ -34,7 +34,7 @@ class _FrGroupTimerRingState extends State<FrGroupTimerRing>
     super.initState();
     _glow = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2800),
+      duration: const Duration(milliseconds: 1800),
     )..repeat(reverse: true);
   }
 

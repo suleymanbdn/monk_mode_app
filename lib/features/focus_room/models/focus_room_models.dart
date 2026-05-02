@@ -11,6 +11,9 @@ enum SessionEndKind {
 
   /// Local user left before the timer finished.
   localLeftEarly,
+
+  /// Another participant left first, which closed the room for everyone.
+  endedByOthers,
 }
 
 class FocusParticipant {

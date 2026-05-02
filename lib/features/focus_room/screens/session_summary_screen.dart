@@ -46,7 +46,8 @@ class _SessionSummaryScreenState extends State<SessionSummaryScreen> {
 
     final s = widget.summary;
     final natural = s.endKind == SessionEndKind.naturalComplete;
-    final peers = natural ? (s.completedNames.length - 1).clamp(0, 99) : 0;
+    final peers =
+        natural ? (s.completedNames.length - 1).clamp(0, 99) : 0;
 
     final reward = await storage.applyFocusTogetherOutcome(
       durationMinutes: s.durationMinutes,
@@ -62,15 +63,28 @@ class _SessionSummaryScreenState extends State<SessionSummaryScreen> {
     final l10n = AppLocalizations.of(context);
     final s = widget.summary;
     final early = s.endKind == SessionEndKind.localLeftEarly;
+    final cutShort = s.endKind == SessionEndKind.endedByOthers;
 
     final headline = early
         ? l10n.summaryHeadlineEarly
+        : cutShort
+        ? l10n.summaryHeadlineCutShort
         : l10n.summaryHeadlineDone;
-    final sub = early ? l10n.summarySubEarly : l10n.summarySubNatural;
+    final sub = early
+        ? l10n.summarySubEarly
+        : cutShort
+        ? l10n.summarySubCutShort
+        : l10n.summarySubNatural;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(early ? l10n.summaryAppBarEarly : l10n.summaryAppBarDone),
+        title: Text(
+          early
+              ? l10n.summaryAppBarEarly
+              : cutShort
+              ? l10n.summaryAppBarCutShort
+              : l10n.summaryAppBarDone,
+        ),
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
@@ -88,9 +102,13 @@ class _SessionSummaryScreenState extends State<SessionSummaryScreen> {
               children: [
                 const SizedBox(height: 8),
                 Icon(
-                  early ? Icons.timer_off_rounded : Icons.check_circle_rounded,
+                  (early || cutShort)
+                      ? Icons.timer_off_rounded
+                      : Icons.check_circle_rounded,
                   size: 56,
-                  color: early ? AppColors.onSurfaceVariant : AppColors.success,
+                  color: (early || cutShort)
+                      ? AppColors.onSurfaceVariant
+                      : AppColors.success,
                 ),
                 const SizedBox(height: 20),
                 Text(

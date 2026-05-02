@@ -79,6 +79,7 @@ class _SharedSessionScreenState extends State<SharedSessionScreen>
         c.pauseSessionTickerForBackground();
         _sessionTickerPausedForBackground = true;
       }
+      _syncSessionScreenWakeLock();
       return;
     }
     if (state == AppLifecycleState.resumed &&
@@ -117,7 +118,18 @@ class _SharedSessionScreenState extends State<SharedSessionScreen>
 
     _navigatedToSummary = true;
     _syncSessionScreenWakeLock();
-    final summary = c.buildNaturalCompleteSummary();
+    final cutShortByPeer = room.participants.any(
+      (p) => p.presence == ParticipantPresence.left,
+    );
+    // If the local user's session completed naturally (timer ran out), always
+    // use naturalComplete — even if some peers left during the session.
+    final selfCompleted = self?.presence == ParticipantPresence.completed;
+    final endKind = selfCompleted
+        ? SessionEndKind.naturalComplete
+        : (cutShortByPeer
+            ? SessionEndKind.endedByOthers
+            : SessionEndKind.naturalComplete);
+    final summary = c.buildSessionSummary(endKind);
     c.clearRoom();
     unawaited(_pushSummary(summary));
   }

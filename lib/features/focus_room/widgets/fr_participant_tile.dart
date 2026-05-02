@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../models/focus_room_models.dart';
 
 /// Last 4 hex (or chars) of [id] so two people with the same nickname stay distinct.
@@ -28,23 +29,23 @@ class FrParticipantTile extends StatelessWidget {
 
   Color get _avatarColor {
     final h = participant.id.hashCode.abs() % 360;
-    return HSLColor.fromAHSL(1, h.toDouble(), 0.35, 0.42).toColor();
+    return HSLColor.fromAHSL(1, h.toDouble(), 0.50, 0.58).toColor();
   }
 
-  String get _statusLabel {
+  String _statusLabel(AppLocalizations l10n) {
     switch (participant.presence) {
       case ParticipantPresence.inLobby:
-        return 'Waiting';
+        return l10n.ftPresenceWaiting;
       case ParticipantPresence.ready:
-        return 'Ready';
+        return l10n.ftPresenceReady;
       case ParticipantPresence.focusing:
-        return 'In focus';
+        return l10n.ftPresenceFocusing;
       case ParticipantPresence.paused:
-        return 'Paused';
+        return l10n.ftPresencePaused;
       case ParticipantPresence.completed:
-        return 'Done';
+        return l10n.ftPresenceDone;
       case ParticipantPresence.left:
-        return 'Left';
+        return l10n.ftPresenceLeft;
     }
   }
 
@@ -55,17 +56,18 @@ class FrParticipantTile extends StatelessWidget {
     return participant.displayName;
   }
 
-  String get _subtitleLine {
+  String _subtitleLine(AppLocalizations l10n) {
     final tag = focusParticipantShortTag(participant.id);
     if (_isSelf) {
-      return '#$tag · ${participant.displayName} · $_statusLabel';
+      return '#$tag · ${participant.displayName} · ${_statusLabel(l10n)}';
     }
-    return '#$tag · $_statusLabel';
+    return '#$tag · ${_statusLabel(l10n)}';
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final title = _titleLine;
     final initial = participant.displayName.isNotEmpty
         ? participant.displayName[0].toUpperCase()
@@ -75,8 +77,8 @@ class FrParticipantTile extends StatelessWidget {
     final borderColor = HSLColor.fromAHSL(
       1,
       (h + 48) % 360,
-      0.5,
-      0.5,
+      0.55,
+      0.65,
     ).toColor();
 
     return Padding(
@@ -119,30 +121,35 @@ class FrParticipantTile extends StatelessWidget {
                     ),
                     if (participant.isHost) ...[
                       const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          'HOST',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: AppColors.primary,
-                            fontSize: 9,
-                            letterSpacing: 1,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 5,
+                            height: 5,
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 5),
+                          Text(
+                            'HOST',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: AppColors.primary,
+                              fontSize: 9,
+                              letterSpacing: 1.2,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ],
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _subtitleLine,
+                  _subtitleLine(l10n),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: AppColors.onSurfaceVariant,
                     height: 1.35,

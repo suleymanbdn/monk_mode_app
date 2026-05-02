@@ -1526,6 +1526,24 @@ abstract class AppLocalizations {
   /// **'The room closed when you ended early.'**
   String get summarySubEarly;
 
+  /// No description provided for @summaryAppBarCutShort.
+  ///
+  /// In en, this message translates to:
+  /// **'CUT SHORT'**
+  String get summaryAppBarCutShort;
+
+  /// No description provided for @summaryHeadlineCutShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Session stopped early'**
+  String get summaryHeadlineCutShort;
+
+  /// No description provided for @summarySubCutShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone left before the timer finished, so the room closed for everyone.'**
+  String get summarySubCutShort;
+
   /// No description provided for @summarySubNatural.
   ///
   /// In en, this message translates to:
@@ -1873,6 +1891,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'CANCEL'**
   String get backupSignOutCancel;
+
+  /// No description provided for @ftPresenceWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting'**
+  String get ftPresenceWaiting;
+
+  /// No description provided for @ftPresenceReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get ftPresenceReady;
+
+  /// No description provided for @ftPresenceFocusing.
+  ///
+  /// In en, this message translates to:
+  /// **'In focus'**
+  String get ftPresenceFocusing;
+
+  /// No description provided for @ftPresencePaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get ftPresencePaused;
+
+  /// No description provided for @ftPresenceDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get ftPresenceDone;
+
+  /// No description provided for @ftPresenceLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get ftPresenceLeft;
 }
 
 class _AppLocalizationsDelegate

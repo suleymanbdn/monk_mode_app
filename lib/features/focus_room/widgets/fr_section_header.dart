@@ -11,7 +11,7 @@ class FrSectionHeader extends StatelessWidget {
     return Text(
       title,
       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-        letterSpacing: 1.4,
+        letterSpacing: 2.0,
         color: AppColors.onSurfaceVariant,
       ),
     );

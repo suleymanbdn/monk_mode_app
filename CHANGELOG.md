@@ -3,6 +3,26 @@
 All notable changes to **Monk Mode** are documented here.  
 Version format: `major.minor.patch+build` (Flutter / Play / App Store).
 
+## [1.4.12+28] — 2026-05-02
+
+### Release
+
+- Play **versionCode** 28 / **versionName** 1.4.12 — store build.
+
+## [1.4.11+27] — 2026-05-01
+
+### Release
+
+- Play **versionCode** 27 / **versionName** 1.4.11 — store build.
+
+### UX
+
+- Floating, rounded SnackBar theme globally; Focus Together hubs: dismiss keyboard by tapping outside; TextField Done/Go actions; PrimaryButton light haptics; Monk Mode session start/pause/complete haptics.
+
+### Fixed
+
+- Focus Together: if someone else ends the shared session early, remaining participants now get the correct summary and rewards path (no longer treated as a natural group completion).
+
 ## [1.4.4+20] — 2026-04-25
 
 ### Release

@@ -68,68 +68,77 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
           onPressed: _busy ? null : () => Navigator.pop(context),
         ),
       ),
-      body: SafeArea(
-        child: ListView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          children: [
-            Text(
-              l10n.ftCreateDurationQuestion,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.ftCreateDurationHelp,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.onSurfaceVariant,
-                height: 1.45,
-              ),
-            ),
-            const SizedBox(height: 22),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: _durationOptions.map((m) {
-                return FrDurationChip(
-                  label: l10n.formatSessionMinutes(m),
-                  selected: _minutes == m,
-                  onTap: () {
-                    if (_busy) return;
-                    setState(() => _minutes = m);
-                  },
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 28),
-            FrSectionHeader(l10n.ftNameOptionalSection),
-            const SizedBox(height: 12),
-            FrCard(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: TextField(
-                controller: _nameController,
-                enabled: !_busy,
-                maxLength: 40,
-                style: theme.textTheme.bodyLarge,
-                cursorColor: AppColors.primary,
-                decoration: InputDecoration(
-                  hintText: l10n.ftRoomNameHint,
-                  border: InputBorder.none,
-                  counterText: '',
-                  hintStyle: TextStyle(color: AppColors.onSurfaceSubtle),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        child: SafeArea(
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            children: [
+              Text(
+                l10n.ftCreateDurationQuestion,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-            const SizedBox(height: 36),
-            PrimaryButton(
-              label: l10n.ftCreateOpenLobby,
-              icon: Icons.groups_rounded,
-              isLoading: _busy,
-              onPressed: _busy ? null : _create,
-            ),
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                l10n.ftCreateDurationHelp,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                  height: 1.45,
+                ),
+              ),
+              const SizedBox(height: 22),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: _durationOptions.map((m) {
+                  return FrDurationChip(
+                    label: l10n.formatSessionMinutes(m),
+                    selected: _minutes == m,
+                    onTap: () {
+                      if (_busy) return;
+                      setState(() => _minutes = m);
+                    },
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 28),
+              FrSectionHeader(l10n.ftNameOptionalSection),
+              const SizedBox(height: 12),
+              FrCard(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                child: TextField(
+                  controller: _nameController,
+                  enabled: !_busy,
+                  maxLength: 40,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => FocusScope.of(context).unfocus(),
+                  style: theme.textTheme.bodyLarge,
+                  cursorColor: AppColors.primary,
+                  decoration: InputDecoration(
+                    hintText: l10n.ftRoomNameHint,
+                    border: InputBorder.none,
+                    counterText: '',
+                    hintStyle: TextStyle(color: AppColors.onSurfaceSubtle),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 36),
+              PrimaryButton(
+                label: l10n.ftCreateOpenLobby,
+                icon: Icons.groups_rounded,
+                isLoading: _busy,
+                onPressed: _busy ? null : _create,
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );

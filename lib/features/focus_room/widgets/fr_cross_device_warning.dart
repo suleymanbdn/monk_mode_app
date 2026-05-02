@@ -47,9 +47,9 @@ class FrCrossDeviceWarning extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.tertiary.withValues(alpha: 0.08),
+        color: AppColors.tertiary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.tertiary.withValues(alpha: 0.35)),
+        border: Border.all(color: AppColors.tertiary.withValues(alpha: 0.45)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

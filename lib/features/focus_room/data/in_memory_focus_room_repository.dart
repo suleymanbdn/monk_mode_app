@@ -186,10 +186,16 @@ class InMemoryFocusRoomRepository implements FocusRoomRepository {
               : p,
         )
         .toList();
+
+    // Only end the room if no other active participant remains.
+    final othersActive = list.any(
+      (p) => p.id != userId && p.presence != ParticipantPresence.left,
+    );
+
     room = room.copyWith(
       participants: list,
-      phase: FocusRoomPhase.ended,
-      clearSessionEndsAt: true,
+      phase: othersActive ? room.phase : FocusRoomPhase.ended,
+      clearSessionEndsAt: !othersActive,
     );
     _byId[roomId] = room;
     return room;

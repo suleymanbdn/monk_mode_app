@@ -800,6 +800,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get summarySubEarly => 'The room closed when you ended early.';
 
   @override
+  String get summaryAppBarCutShort => 'CUT SHORT';
+
+  @override
+  String get summaryHeadlineCutShort => 'Session stopped early';
+
+  @override
+  String get summarySubCutShort =>
+      'Someone left before the timer finished, so the room closed for everyone.';
+
+  @override
   String get summarySubNatural => 'Nice work staying in flow together.';
 
   @override
@@ -1005,4 +1015,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupSignOutCancel => 'CANCEL';
+
+  @override
+  String get ftPresenceWaiting => 'Waiting';
+
+  @override
+  String get ftPresenceReady => 'Ready';
+
+  @override
+  String get ftPresenceFocusing => 'In focus';
+
+  @override
+  String get ftPresencePaused => 'Paused';
+
+  @override
+  String get ftPresenceDone => 'Done';
+
+  @override
+  String get ftPresenceLeft => 'Left';
 }

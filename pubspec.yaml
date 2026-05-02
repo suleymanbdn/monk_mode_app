@@ -1,7 +1,7 @@
 name: monk_mode
 description: "Monk Mode: Dopamine Detox — focus timer, streaks & Focus Together rooms."
 publish_to: none
-version: 1.4.10+26
+version: 1.4.12+28
 
 environment:
   sdk: ^3.9.2

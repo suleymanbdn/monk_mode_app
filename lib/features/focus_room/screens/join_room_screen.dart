@@ -35,17 +35,9 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
     final raw = _codeController.text
         .replaceAll(RegExp(r'\s'), '')
         .toUpperCase();
-    if (raw.length < 4) {
+    if (raw.length != 8) {
       final msg = AppLocalizations.of(context).ftJoinMinChars;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(msg),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       return;
     }
 
@@ -68,11 +60,7 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(message),
-            behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
           ),
         );
         return;
@@ -103,79 +91,88 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
           onPressed: _busy ? null : () => Navigator.pop(context),
         ),
       ),
-      body: SafeArea(
-        child: ListView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          children: [
-            Text(
-              l10n.ftJoinEnterCode,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.ftJoinCodeHelp,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.onSurfaceVariant,
-                height: 1.45,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const FrCrossDeviceWarning(
-              variant: FrCrossDeviceWarningVariant.joinScreen,
-            ),
-            const SizedBox(height: 20),
-            FrSectionHeader(l10n.ftJoinCodeSection),
-            const SizedBox(height: 12),
-            FrCard(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: TextField(
-                controller: _codeController,
-                enabled: !_busy,
-                onChanged: (_) => setState(() {}),
-                textCapitalization: TextCapitalization.characters,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  letterSpacing: 6,
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        child: SafeArea(
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            children: [
+              Text(
+                l10n.ftJoinEnterCode,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
                 ),
-                cursorColor: AppColors.primary,
-                decoration: const InputDecoration(
-                  hintText: '••••••••',
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(
-                    color: AppColors.onSurfaceSubtle,
-                    letterSpacing: 6,
-                  ),
-                ),
-                maxLength: 12,
-                buildCounter:
-                    (
-                      _, {
-                      required currentLength,
-                      required isFocused,
-                      maxLength,
-                    }) => null,
               ),
-            ),
-            if (code.length < 4 && code.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                l10n.ftJoinCodeHelp,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                  height: 1.45,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const FrCrossDeviceWarning(
+                variant: FrCrossDeviceWarningVariant.joinScreen,
+              ),
+              const SizedBox(height: 20),
+              FrSectionHeader(l10n.ftJoinCodeSection),
               const SizedBox(height: 12),
-              FrEmptyHint(
-                title: l10n.ftJoinTypingHint,
-                icon: Icons.edit_note_rounded,
+              FrCard(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                child: TextField(
+                  controller: _codeController,
+                  enabled: !_busy,
+                  onChanged: (_) => setState(() {}),
+                  onSubmitted: (_) => _join(),
+                  textCapitalization: TextCapitalization.characters,
+                  textInputAction: TextInputAction.go,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    letterSpacing: 6,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary,
+                  ),
+                  cursorColor: AppColors.primary,
+                  decoration: const InputDecoration(
+                    hintText: '••••••••',
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(
+                      color: AppColors.onSurfaceSubtle,
+                      letterSpacing: 6,
+                    ),
+                  ),
+                  maxLength: 12,
+                  buildCounter:
+                      (
+                        _, {
+                        required currentLength,
+                        required isFocused,
+                        maxLength,
+                      }) => null,
+                ),
               ),
+              if (code.isNotEmpty && code.length < 8) ...[
+                const SizedBox(height: 12),
+                FrEmptyHint(
+                  title: l10n.ftJoinTypingHint,
+                  icon: Icons.edit_note_rounded,
+                ),
+              ],
+              const SizedBox(height: 28),
+              PrimaryButton(
+                label: l10n.ftJoinLobby,
+                icon: Icons.login_rounded,
+                isLoading: _busy,
+                onPressed: _busy ? null : _join,
+              ),
+              const SizedBox(height: 16),
             ],
-            const SizedBox(height: 28),
-            PrimaryButton(
-              label: l10n.ftJoinLobby,
-              icon: Icons.login_rounded,
-              isLoading: _busy,
-              onPressed: _busy ? null : _join,
-            ),
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
     );

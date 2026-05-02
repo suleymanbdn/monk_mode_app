@@ -193,7 +193,7 @@ class _HeaderIconButton extends StatelessWidget {
       onPressed: onPressed,
       style: IconButton.styleFrom(
         backgroundColor: AppColors.surfaceContainer,
-        side: const BorderSide(color: AppColors.outline, width: 1),
+        side: const BorderSide(color: AppColors.borderSubtle, width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         minimumSize: const Size(40, 40),
         fixedSize: const Size(40, 40),
@@ -280,7 +280,7 @@ class _DopamineScoreCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           // Subtle gold tint once the user has earned any points.
-          color: hasScore ? AppColors.primaryDim : AppColors.outline,
+          color: hasScore ? AppColors.primaryDim : AppColors.borderSubtle,
           width: 1,
         ),
       ),
@@ -407,7 +407,7 @@ class _StreakCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           // Gold border when streak is alive, dim when not.
-          color: hasStreak ? AppColors.primaryDim : AppColors.outline,
+          color: hasStreak ? AppColors.primaryDim : AppColors.borderSubtle,
           width: 1,
         ),
       ),
@@ -538,7 +538,7 @@ class _FocusTimeCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.outline, width: 1),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
       child: Row(
         children: [

@@ -259,6 +259,9 @@
   "summaryHeadlineEarly": "Ayrıldın",
   "summaryHeadlineDone": "Oturum tamamlandı",
   "summarySubEarly": "Erken bitirdiğinde oda kapandı.",
+  "summaryAppBarCutShort": "ERKEN BİTTİ",
+  "summaryHeadlineCutShort": "Oturum erken kesildi",
+  "summarySubCutShort": "Süre dolmadan biri ayrıldığı için oda herkes için kapandı.",
   "summarySubNatural": "Birlikte akışta kaldığın için harika.",
   "summaryEndedAt": "Bitiş: {time}",
   "summaryDefaultRoom": "Odak odası",
@@ -316,5 +319,11 @@
   "backupSignOutConfirmTitle": "Yedekten çıkılsın mı?",
   "backupSignOutConfirmBody": "İstatistikler bu cihazda kalır ama artık Google ile senkronize edilmez.",
   "backupSignOutConfirm": "ÇIKIŞ YAP",
-  "backupSignOutCancel": "İPTAL"
+  "backupSignOutCancel": "İPTAL",
+  "ftPresenceWaiting": "Bekliyor",
+  "ftPresenceReady": "Hazır",
+  "ftPresenceFocusing": "Odaklanıyor",
+  "ftPresencePaused": "Duraklatıldı",
+  "ftPresenceDone": "Tamamlandı",
+  "ftPresenceLeft": "Ayrıldı"
 }

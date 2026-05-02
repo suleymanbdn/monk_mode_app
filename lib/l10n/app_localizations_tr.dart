@@ -797,6 +797,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get summarySubEarly => 'Erken bitirdiğinde oda kapandı.';
 
   @override
+  String get summaryAppBarCutShort => 'ERKEN BİTTİ';
+
+  @override
+  String get summaryHeadlineCutShort => 'Oturum erken kesildi';
+
+  @override
+  String get summarySubCutShort =>
+      'Süre dolmadan biri ayrıldığı için oda herkes için kapandı.';
+
+  @override
   String get summarySubNatural => 'Birlikte akışta kaldığın için harika.';
 
   @override
@@ -1000,4 +1010,22 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get backupSignOutCancel => 'İPTAL';
+
+  @override
+  String get ftPresenceWaiting => 'Bekliyor';
+
+  @override
+  String get ftPresenceReady => 'Hazır';
+
+  @override
+  String get ftPresenceFocusing => 'Odaklanıyor';
+
+  @override
+  String get ftPresencePaused => 'Duraklatıldı';
+
+  @override
+  String get ftPresenceDone => 'Tamamlandı';
+
+  @override
+  String get ftPresenceLeft => 'Ayrıldı';
 }

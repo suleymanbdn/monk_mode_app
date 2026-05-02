@@ -324,14 +324,27 @@ class FirestoreFocusRoomRepository implements FocusRoomRepository {
     required String userId,
   }) async {
     final roomRef = _rooms.doc(roomId);
+    final partSnap = await roomRef.collection('participants').get();
     final batch = _db.batch();
-    batch.update(roomRef, {
-      'phase': FocusRoomPhase.ended.name,
-      'sessionEndsAt': FieldValue.delete(),
-    });
+
     batch.update(roomRef.collection('participants').doc(userId), {
       'presence': ParticipantPresence.left.name,
     });
+
+    // Only end the room if no other active participant remains.
+    final othersActive = partSnap.docs.any((doc) {
+      if (doc.id == userId) return false;
+      final pres = _parsePresence(doc.data()['presence'] as String?);
+      return pres != ParticipantPresence.left;
+    });
+
+    if (!othersActive) {
+      batch.update(roomRef, {
+        'phase': FocusRoomPhase.ended.name,
+        'sessionEndsAt': FieldValue.delete(),
+      });
+    }
+
     await batch.commit();
     return _fetchRoom(roomId);
   }

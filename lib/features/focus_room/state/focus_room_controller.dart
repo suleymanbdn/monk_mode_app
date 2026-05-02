@@ -147,7 +147,10 @@ class FocusRoomController extends ChangeNotifier {
   /// Guest toggles ready ↔ waiting in lobby.
   Future<void> toggleReady() async {
     if (_room == null) return;
-    final self = _room!.participants.firstWhere((p) => p.id == localUserId);
+    final self = _room!.participants
+        .where((p) => p.id == localUserId)
+        .firstOrNull;
+    if (self == null) return;
     final next = self.presence == ParticipantPresence.ready
         ? ParticipantPresence.inLobby
         : ParticipantPresence.ready;
@@ -271,12 +274,9 @@ class FocusRoomController extends ChangeNotifier {
     );
   }
 
-  FocusSessionSummary buildNaturalCompleteSummary() {
+  FocusSessionSummary buildSessionSummary(SessionEndKind endKind) {
     if (_room == null) throw StateError('No room');
-    return FocusRoomSummaryBuilder.build(
-      room: _room!,
-      endKind: SessionEndKind.naturalComplete,
-    );
+    return FocusRoomSummaryBuilder.build(room: _room!, endKind: endKind);
   }
 
   void clearRoom() {

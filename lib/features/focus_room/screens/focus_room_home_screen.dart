@@ -106,113 +106,122 @@ class _FocusRoomHomeScreenState extends State<FocusRoomHomeScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SafeArea(
-        child: AnimatedOpacity(
-          opacity: _contentVisible ? 1 : 0,
-          duration: const Duration(milliseconds: 420),
-          curve: Curves.easeOutCubic,
-          child: AnimatedSlide(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        child: SafeArea(
+          child: AnimatedOpacity(
+            opacity: _contentVisible ? 1 : 0,
             duration: const Duration(milliseconds: 420),
             curve: Curves.easeOutCubic,
-            offset: _contentVisible ? Offset.zero : const Offset(0, 0.02),
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              children: [
-                Text(
-                  l10n.ftHubHeadline,
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.5,
-                  ),
+            child: AnimatedSlide(
+              duration: const Duration(milliseconds: 420),
+              curve: Curves.easeOutCubic,
+              offset: _contentVisible ? Offset.zero : const Offset(0, 0.02),
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 8,
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  focusRoomCloudSyncEnabled
-                      ? l10n.ftHubBodyOnline
-                      : l10n.ftHubBodyOffline,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                    height: 1.55,
+                children: [
+                  Text(
+                    l10n.ftHubHeadline,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.5,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 14),
-                const FrCrossDeviceWarning(
-                  variant: FrCrossDeviceWarningVariant.hub,
-                ),
-                if (AppStorageScope.maybeOf(context) case final storage?) ...[
-                  const SizedBox(height: 20),
-                  FrCircleJourneyCard(
-                    progress: storage.loadFocusTogetherCircleProgress(),
-                    compact: false,
+                  const SizedBox(height: 10),
+                  Text(
+                    focusRoomCloudSyncEnabled
+                        ? l10n.ftHubBodyOnline
+                        : l10n.ftHubBodyOffline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                      height: 1.55,
+                    ),
                   ),
+                  const SizedBox(height: 14),
+                  const FrCrossDeviceWarning(
+                    variant: FrCrossDeviceWarningVariant.hub,
+                  ),
+                  if (AppStorageScope.maybeOf(context) case final storage?) ...[
+                    const SizedBox(height: 20),
+                    FrCircleJourneyCard(
+                      progress: storage.loadFocusTogetherCircleProgress(),
+                      compact: false,
+                    ),
+                  ],
+                  const SizedBox(height: 24),
+                  FrSectionHeader(l10n.ftYourNameHeader),
+                  const SizedBox(height: 10),
+                  FrCard(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: _nameCtrl,
+                          maxLength: 20,
+                          textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) => FocusScope.of(context).unfocus(),
+                          style: theme.textTheme.bodyLarge,
+                          decoration: InputDecoration(
+                            hintText: l10n.ftNameFieldHint,
+                            border: InputBorder.none,
+                            counterText: '',
+                            isDense: true,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          l10n.ftNameHelp,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                            height: 1.45,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton.icon(
+                            onPressed: _saveDisplayName,
+                            icon: const Icon(Icons.check_rounded, size: 20),
+                            label: Text(l10n.ftSaveName),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  FrSectionHeader(l10n.ftStartHere),
+                  const SizedBox(height: 14),
+                  FrHubActionCard(
+                    title: l10n.ftCreateRoomTitle,
+                    subtitle: l10n.ftCreateRoomSubtitle,
+                    icon: Icons.add_circle_outline_rounded,
+                    onTap: () => Navigator.push<void>(
+                      context,
+                      focusRoomFadeRoute(CreateRoomScreen(controller: c)),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  FrHubActionCard(
+                    title: l10n.ftJoinRoomTitle,
+                    subtitle: focusRoomCloudSyncEnabled
+                        ? l10n.ftJoinRoomSubtitleOnline
+                        : l10n.ftJoinRoomSubtitleOffline,
+                    icon: Icons.login_rounded,
+                    onTap: () => Navigator.push<void>(
+                      context,
+                      focusRoomFadeRoute(JoinRoomScreen(controller: c)),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
                 ],
-                const SizedBox(height: 24),
-                FrSectionHeader(l10n.ftYourNameHeader),
-                const SizedBox(height: 10),
-                FrCard(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextField(
-                        controller: _nameCtrl,
-                        maxLength: 20,
-                        textCapitalization: TextCapitalization.words,
-                        style: theme.textTheme.bodyLarge,
-                        decoration: InputDecoration(
-                          hintText: l10n.ftNameFieldHint,
-                          border: InputBorder.none,
-                          counterText: '',
-                          isDense: true,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        l10n.ftNameHelp,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                          height: 1.45,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton.icon(
-                          onPressed: _saveDisplayName,
-                          icon: const Icon(Icons.check_rounded, size: 20),
-                          label: Text(l10n.ftSaveName),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 28),
-                FrSectionHeader(l10n.ftStartHere),
-                const SizedBox(height: 14),
-                FrHubActionCard(
-                  title: l10n.ftCreateRoomTitle,
-                  subtitle: l10n.ftCreateRoomSubtitle,
-                  icon: Icons.add_circle_outline_rounded,
-                  onTap: () => Navigator.push<void>(
-                    context,
-                    focusRoomFadeRoute(CreateRoomScreen(controller: c)),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                FrHubActionCard(
-                  title: l10n.ftJoinRoomTitle,
-                  subtitle: focusRoomCloudSyncEnabled
-                      ? l10n.ftJoinRoomSubtitleOnline
-                      : l10n.ftJoinRoomSubtitleOffline,
-                  icon: Icons.login_rounded,
-                  onTap: () => Navigator.push<void>(
-                    context,
-                    focusRoomFadeRoute(JoinRoomScreen(controller: c)),
-                  ),
-                ),
-                const SizedBox(height: 32),
-              ],
+              ),
             ),
           ),
         ),

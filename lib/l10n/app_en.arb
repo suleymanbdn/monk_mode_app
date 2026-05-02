@@ -369,6 +369,9 @@
   "summaryHeadlineEarly": "You stepped away",
   "summaryHeadlineDone": "Session complete",
   "summarySubEarly": "The room closed when you ended early.",
+  "summaryAppBarCutShort": "CUT SHORT",
+  "summaryHeadlineCutShort": "Session stopped early",
+  "summarySubCutShort": "Someone left before the timer finished, so the room closed for everyone.",
   "summarySubNatural": "Nice work staying in flow together.",
   "summaryEndedAt": "Ended at {time}",
   "@summaryEndedAt": {
@@ -488,5 +491,11 @@
   "backupSignOutConfirmTitle": "Sign out of backup?",
   "backupSignOutConfirmBody": "Your stats stay on this device but will no longer sync to Google.",
   "backupSignOutConfirm": "SIGN OUT",
-  "backupSignOutCancel": "CANCEL"
+  "backupSignOutCancel": "CANCEL",
+  "ftPresenceWaiting": "Waiting",
+  "ftPresenceReady": "Ready",
+  "ftPresenceFocusing": "In focus",
+  "ftPresencePaused": "Paused",
+  "ftPresenceDone": "Done",
+  "ftPresenceLeft": "Left"
 }
