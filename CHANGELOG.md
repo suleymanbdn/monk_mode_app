@@ -3,6 +3,12 @@
 All notable changes to **Monk Mode** are documented here.  
 Version format: `major.minor.patch+build` (Flutter / Play / App Store).
 
+## [1.4.14+30] — 2026-05-02
+
+### Release
+
+- Play **versionCode** 30 / **versionName** 1.4.14 — store build.
+
 ## [1.4.13+29] — 2026-05-02
 
 ### Release
