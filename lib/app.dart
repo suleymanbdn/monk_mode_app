@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:in_app_update/in_app_update.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
 import 'models/app_language.dart';
@@ -7,6 +10,7 @@ import 'l10n/app_localizations.dart';
 import 'screens/home_screen.dart';
 import 'services/app_update_checker.dart';
 import 'services/app_update_navigation.dart';
+import 'services/play_update_service.dart';
 import 'services/storage_service.dart';
 import 'widgets/app_storage_scope.dart';
 
@@ -24,6 +28,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   late Locale _appLocale;
   DateTime? _launchAt;
+  PlayUpdateService? _playUpdateService;
 
   @override
   void initState() {
@@ -31,13 +36,21 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     _launchAt = DateTime.now();
     WidgetsBinding.instance.addObserver(this);
     _appLocale = _localeForLanguage(widget.storage.loadAppLanguage());
+    _initUpdateService();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _promptUpdateIfNeeded(),
     );
-    // Backup: first Firestore read can be slow right after cold start.
+    // Backup: first check can be slow right after cold start.
     Future<void>.delayed(const Duration(milliseconds: 1800), () {
       if (mounted) _promptUpdateIfNeeded();
     });
+  }
+
+  Future<void> _initUpdateService() async {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      final prefs = await SharedPreferences.getInstance();
+      if (mounted) _playUpdateService = PlayUpdateService(prefs);
+    }
   }
 
   @override
@@ -68,6 +81,23 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   Future<void> _promptUpdateIfNeeded() async {
+    // ── Android: Play Core (source of truth — no Firestore dependency) ───────
+    final svc = _playUpdateService;
+    if (svc != null) {
+      final info = await svc.fetchUpdateInfo();
+      if (!mounted) return;
+      if (svc.isUpdateAvailable(info)) {
+        try {
+          await InAppUpdate.performImmediateUpdate();
+        } catch (_) {
+          // Sideload / debug build — Play Core throws. Fall through to Firestore.
+        }
+        return;
+      }
+      return; // Play says up to date — no need to check Firestore.
+    }
+
+    // ── iOS / fallback: Firestore app_config check ───────────────────────────
     final r = await AppUpdateChecker.check();
     if (!mounted || !r.shouldPrompt) return;
 

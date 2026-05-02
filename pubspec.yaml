@@ -1,7 +1,7 @@
 name: monk_mode
 description: "Monk Mode: Dopamine Detox — focus timer, streaks & Focus Together rooms."
 publish_to: none
-version: 1.4.14+30
+version: 1.4.16+32
 
 environment:
   sdk: ^3.9.2
@@ -29,6 +29,9 @@ dependencies:
   # Keep display awake during an active focus timer (matches common productivity apps).
   wakelock_plus: ^1.2.8
   google_sign_in: ^6.2.2
+
+  # Play Store native in-app update check (Android only).
+  in_app_update: ^4.2.5
 
 dev_dependencies:
   flutter_test:
