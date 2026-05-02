@@ -188,7 +188,20 @@ class _FocusRoomHomeScreenState extends State<FocusRoomHomeScreen> {
                           alignment: Alignment.centerRight,
                           child: TextButton.icon(
                             onPressed: _saveDisplayName,
-                            icon: const Icon(Icons.check_rounded, size: 20),
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.primary,
+                              textStyle:
+                                  Theme.of(context).textTheme.labelMedium?.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            icon: const Icon(Icons.check_rounded, size: 18),
                             label: Text(l10n.ftSaveName),
                           ),
                         ),
@@ -198,25 +211,41 @@ class _FocusRoomHomeScreenState extends State<FocusRoomHomeScreen> {
                   const SizedBox(height: 28),
                   FrSectionHeader(l10n.ftStartHere),
                   const SizedBox(height: 14),
-                  FrHubActionCard(
-                    title: l10n.ftCreateRoomTitle,
-                    subtitle: l10n.ftCreateRoomSubtitle,
-                    icon: Icons.add_circle_outline_rounded,
-                    onTap: () => Navigator.push<void>(
-                      context,
-                      focusRoomFadeRoute(CreateRoomScreen(controller: c)),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  FrHubActionCard(
-                    title: l10n.ftJoinRoomTitle,
-                    subtitle: focusRoomCloudSyncEnabled
-                        ? l10n.ftJoinRoomSubtitleOnline
-                        : l10n.ftJoinRoomSubtitleOffline,
-                    icon: Icons.login_rounded,
-                    onTap: () => Navigator.push<void>(
-                      context,
-                      focusRoomFadeRoute(JoinRoomScreen(controller: c)),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: FrHubActionCard(
+                            highlighted: true,
+                            title: l10n.ftCreateRoomTitle,
+                            subtitle: l10n.ftCreateRoomSubtitle,
+                            icon: Icons.add_circle_outline_rounded,
+                            onTap: () => Navigator.push<void>(
+                              context,
+                              focusRoomFadeRoute(
+                                CreateRoomScreen(controller: c),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: FrHubActionCard(
+                            title: l10n.ftJoinRoomTitle,
+                            subtitle: focusRoomCloudSyncEnabled
+                                ? l10n.ftJoinRoomSubtitleOnline
+                                : l10n.ftJoinRoomSubtitleOffline,
+                            icon: Icons.login_rounded,
+                            onTap: () => Navigator.push<void>(
+                              context,
+                              focusRoomFadeRoute(
+                                JoinRoomScreen(controller: c),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 32),

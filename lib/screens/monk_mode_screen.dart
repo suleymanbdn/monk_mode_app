@@ -52,6 +52,7 @@ class _MonkModeScreenState extends State<MonkModeScreen>
   TimerStatus _status = TimerStatus.idle;
   late int _remainingSeconds;
   Timer? _ticker;
+  late AppStats _stats;
 
   /// True when [TimerStatus.paused] was caused by leaving the app (not the PAUSE button).
   bool _pausedDueToBackground = false;
@@ -69,6 +70,7 @@ class _MonkModeScreenState extends State<MonkModeScreen>
     _presetMinutes = widget.storage.loadDurationPresets();
     _selectedDuration = _presetMinutes.first * 60;
     _remainingSeconds = _selectedDuration;
+    _stats = widget.storage.loadAppStats();
   }
 
   @override
@@ -379,19 +381,10 @@ class _MonkModeScreenState extends State<MonkModeScreen>
                   progress: _progress,
                   status: _status,
                 ),
-                if (_status == TimerStatus.running) ...[
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      l10n.monkStayAwakeHint,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                        height: 1.4,
-                      ),
-                    ),
-                  ),
+                if (_status == TimerStatus.running ||
+                    _status == TimerStatus.paused) ...[
+                  const SizedBox(height: 20),
+                  _SessionStatChips(stats: _stats),
                 ],
 
                 const Spacer(),
@@ -639,30 +632,102 @@ class _TimerControls extends StatelessWidget {
       );
     }
 
-    // Running / paused: reset on the left, pause/resume on the right.
-    return Row(
+    // Running / paused: big pause/resume button, then Reset as text below.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(
-          child: PrimaryButton(
-            label: l10n.monkReset,
-            outlined: true,
-            onPressed: onReset,
-          ),
+        PrimaryButton(
+          label: status == TimerStatus.running ? l10n.monkPause : l10n.monkResume,
+          icon: status == TimerStatus.running
+              ? Icons.pause_rounded
+              : Icons.play_arrow_rounded,
+          onPressed: status == TimerStatus.running ? onPause : onResume,
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          flex: 2,
-          child: PrimaryButton(
-            label: status == TimerStatus.running
-                ? l10n.monkPause
-                : l10n.monkResume,
-            icon: status == TimerStatus.running
-                ? Icons.pause_rounded
-                : Icons.play_arrow_rounded,
-            onPressed: status == TimerStatus.running ? onPause : onResume,
+        const SizedBox(height: 12),
+        TextButton(
+          onPressed: onReset,
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.onSurfaceVariant,
+            minimumSize: const Size.fromHeight(44),
+            textStyle: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.5,
+            ),
           ),
+          child: Text(l10n.monkReset),
         ),
       ],
+    );
+  }
+}
+
+// ── Session stat chips ────────────────────────────────────────────────────────
+//
+// Shows streak, dopamine score and total sessions as small chips while
+// the timer is running, giving the user a quick motivational snapshot.
+
+class _SessionStatChips extends StatelessWidget {
+  const _SessionStatChips({required this.stats});
+
+  final AppStats stats;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _Chip(
+          icon: Icons.local_fire_department_rounded,
+          label: '${stats.effectiveStreak} ${l10n.dayStreakSuffix}',
+        ),
+        const SizedBox(width: 8),
+        _Chip(
+          icon: Icons.bolt_rounded,
+          label: '${stats.dopamineScore} puan',
+        ),
+        const SizedBox(width: 8),
+        _Chip(
+          icon: Icons.check_circle_outline_rounded,
+          label: '${stats.totalSessions} oturum',
+        ),
+      ],
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainer,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.outline, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: AppColors.primary),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.onSurfaceVariant,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

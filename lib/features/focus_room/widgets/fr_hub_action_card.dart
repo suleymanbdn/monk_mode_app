@@ -8,12 +8,15 @@ class FrHubActionCard extends StatefulWidget {
     required this.subtitle,
     required this.icon,
     required this.onTap,
+    this.highlighted = false,
   });
 
   final String title;
   final String subtitle;
   final IconData icon;
   final VoidCallback onTap;
+  /// When true, the card uses an amber accent border and background tint.
+  final bool highlighted;
 
   @override
   State<FrHubActionCard> createState() => _FrHubActionCardState();
@@ -25,13 +28,16 @@ class _FrHubActionCardState extends State<FrHubActionCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final hl = widget.highlighted;
 
     return AnimatedScale(
       scale: _scale,
       duration: const Duration(milliseconds: 120),
       curve: Curves.easeOutCubic,
       child: Material(
-        color: AppColors.surfaceContainer,
+        color: hl
+            ? AppColors.primary.withValues(alpha: 0.10)
+            : AppColors.surfaceContainer,
         borderRadius: BorderRadius.circular(18),
         child: InkWell(
           onTap: widget.onTap,
@@ -42,41 +48,43 @@ class _FrHubActionCardState extends State<FrHubActionCard> {
             setState(() => _scale = pressed ? 0.985 : 1);
           },
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: AppColors.outline),
+              border: Border.all(
+                color: hl
+                    ? AppColors.primary.withValues(alpha: 0.55)
+                    : AppColors.outline,
+              ),
             ),
-            child: Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 52,
-                  height: 52,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(14),
+                    color: AppColors.primary.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(widget.icon, color: AppColors.primary, size: 26),
+                  child: Icon(widget.icon, color: AppColors.primary, size: 22),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(widget.subtitle, style: theme.textTheme.bodySmall),
-                    ],
+                const SizedBox(height: 12),
+                Text(
+                  widget.title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: hl ? AppColors.primary : null,
                   ),
                 ),
-                Icon(
-                  Icons.chevron_right_rounded,
-                  color: AppColors.onSurfaceSubtle,
+                const SizedBox(height: 3),
+                Text(
+                  widget.subtitle,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),

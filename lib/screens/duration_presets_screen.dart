@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
-import '../l10n/app_formatting.dart';
 import '../services/storage_service.dart';
 
 /// Lets the user choose three distinct session lengths (minutes) for Monk Mode.
@@ -39,47 +38,98 @@ class _DurationPresetsScreenState extends State<DurationPresetsScreen> {
     Navigator.pop(context);
   }
 
-  Widget _dropdown({
+  /// Snaps a raw slider double to the nearest value in [StorageService.allowedFocusMinutes].
+  int _snapToAllowed(double raw) {
+    final allowed = StorageService.allowedFocusMinutes;
+    int nearest = allowed.first;
+    int minDiff = (raw - nearest).abs().round();
+    for (final v in allowed) {
+      final diff = (raw - v).abs().round();
+      if (diff < minDiff) {
+        minDiff = diff;
+        nearest = v;
+      }
+    }
+    return nearest;
+  }
+
+  Widget _presetCard({
     required AppLocalizations l10n,
-    required String title,
+    required String label,
     required int value,
     required ValueChanged<int> onChanged,
   }) {
     final theme = Theme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: theme.textTheme.labelMedium),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceContainer,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.outline),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<int>(
-              value: value,
-              isExpanded: true,
-              dropdownColor: AppColors.surfaceContainerHigh,
-              items: StorageService.allowedFocusMinutes
-                  .map(
-                    (m) => DropdownMenuItem(
-                      value: m,
-                      child: Text(l10n.formatSessionMinutes(m)),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainer,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: AppColors.onSurfaceSubtle,
+                      letterSpacing: 1.2,
                     ),
-                  )
-                  .toList(),
-              onChanged: (v) {
-                if (v == null) return;
-                onChanged(v);
+                  ),
+                  const SizedBox(height: 4),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '$value',
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' dk',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+            ],
+          ),
+          const SizedBox(height: 8),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: AppColors.primary,
+              inactiveTrackColor: AppColors.borderSubtle,
+              thumbColor: AppColors.primary,
+              overlayColor: AppColors.primary.withValues(alpha: 0.16),
+              trackHeight: 3,
+            ),
+            child: Slider(
+              value: value.toDouble(),
+              min: 5,
+              max: 180,
+              divisions: 35,
+              onChanged: (raw) {
+                onChanged(_snapToAllowed(raw));
               },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -103,23 +153,23 @@ class _DurationPresetsScreenState extends State<DurationPresetsScreen> {
           children: [
             Text(l10n.durationPresetsIntro, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 24),
-            _dropdown(
+            _presetCard(
               l10n: l10n,
-              title: l10n.durationPresetsFirst,
+              label: l10n.durationPresetsFirst,
               value: _first,
               onChanged: (v) => setState(() => _first = v),
             ),
-            const SizedBox(height: 18),
-            _dropdown(
+            const SizedBox(height: 16),
+            _presetCard(
               l10n: l10n,
-              title: l10n.durationPresetsSecond,
+              label: l10n.durationPresetsSecond,
               value: _second,
               onChanged: (v) => setState(() => _second = v),
             ),
-            const SizedBox(height: 18),
-            _dropdown(
+            const SizedBox(height: 16),
+            _presetCard(
               l10n: l10n,
-              title: l10n.durationPresetsThird,
+              label: l10n.durationPresetsThird,
               value: _third,
               onChanged: (v) => setState(() => _third = v),
             ),

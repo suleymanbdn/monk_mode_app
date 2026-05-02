@@ -272,6 +272,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
+    // Build the backup group tiles depending on sign-in state
+    final List<_SettingsTileData> backupTiles = CloudBackupService.isSignedInWithGoogle
+        ? [
+            _SettingsTileData(
+              icon: Icons.cloud_done_rounded,
+              title: l10n.backupSignedInTitle,
+              subtitle: l10n.backupSignedInSubtitle(
+                CloudBackupService.signedInEmail ?? '',
+              ),
+              onTap: _backupBusy ? null : _syncNow,
+              trailing: _backupBusy
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(
+                      l10n.backupSyncNow,
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+            ),
+            _SettingsTileData(
+              icon: Icons.logout_rounded,
+              title: l10n.backupSignOut,
+              subtitle: l10n.backupSignOutSubtitle,
+              onTap: _signOutBackup,
+            ),
+          ]
+        : [
+            _SettingsTileData(
+              icon: Icons.login_rounded,
+              title: l10n.backupSignInTitle,
+              subtitle: l10n.backupSignInSubtitle,
+              onTap: _backupBusy ? null : _signInWithGoogle,
+              trailing: _backupBusy
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : null,
+            ),
+          ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.settingsTitle),
@@ -285,128 +334,125 @@ class _SettingsScreenState extends State<SettingsScreen> {
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           children: [
-            _SettingsTile(
-              icon: Icons.system_update_rounded,
-              title: l10n.settingsCheckForUpdates,
-              subtitle: l10n.settingsCheckForUpdatesSubtitle,
-              onTap: _checkForUpdatesFromSettings,
-            ),
-            const SizedBox(height: 28),
-            Text(l10n.settingsBackup, style: theme.textTheme.labelMedium),
-            const SizedBox(height: 12),
-            if (CloudBackupService.isSignedInWithGoogle) ...[
-              _SettingsTile(
-                icon: Icons.cloud_done_rounded,
-                title: l10n.backupSignedInTitle,
-                subtitle: l10n.backupSignedInSubtitle(
-                  CloudBackupService.signedInEmail ?? '',
+            // TERCİHLER — check for updates (standalone at top)
+            _SettingsGroup(
+              tiles: [
+                _SettingsTileData(
+                  icon: Icons.system_update_rounded,
+                  title: l10n.settingsCheckForUpdates,
+                  subtitle: l10n.settingsCheckForUpdatesSubtitle,
+                  onTap: _checkForUpdatesFromSettings,
                 ),
-                onTap: _backupBusy ? null : _syncNow,
-                trailing: _backupBusy
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text(
-                        l10n.backupSyncNow,
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
+              ],
+            ),
+
+            // HESAP & YEDEKLEME
+            const SizedBox(height: 16),
+            _SectionLabel(label: l10n.settingsBackup, theme: theme),
+            const SizedBox(height: 8),
+            _SettingsGroup(tiles: backupTiles),
+
+            // DİL
+            const SizedBox(height: 16),
+            _SectionLabel(label: l10n.settingsLanguage, theme: theme),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceContainer,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.borderSubtle, width: 1),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: SegmentedButton<AppLanguage>(
+                      segments: [
+                        ButtonSegment<AppLanguage>(
+                          value: AppLanguage.en,
+                          label: Text(l10n.languageEnglishName),
                         ),
-                      ),
-              ),
-              const SizedBox(height: 8),
-              _SettingsTile(
-                icon: Icons.logout_rounded,
-                title: l10n.backupSignOut,
-                subtitle: l10n.backupSignOutSubtitle,
-                onTap: _signOutBackup,
-              ),
-            ] else
-              _SettingsTile(
-                icon: Icons.login_rounded,
-                title: l10n.backupSignInTitle,
-                subtitle: l10n.backupSignInSubtitle,
-                onTap: _backupBusy ? null : _signInWithGoogle,
-                trailing: _backupBusy
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : null,
-              ),
-            const SizedBox(height: 28),
-            Text(l10n.settingsLanguage, style: theme.textTheme.labelMedium),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<AppLanguage>(
-                segments: [
-                  ButtonSegment<AppLanguage>(
-                    value: AppLanguage.en,
-                    label: Text(l10n.languageEnglishName),
+                        ButtonSegment<AppLanguage>(
+                          value: AppLanguage.tr,
+                          label: Text(l10n.languageTurkishName),
+                        ),
+                      ],
+                      selected: {widget.storage.loadAppLanguage()},
+                      onSelectionChanged: (next) {
+                        if (next.isEmpty) return;
+                        final v = next.first;
+                        final loc = v == AppLanguage.tr
+                            ? const Locale('tr')
+                            : const Locale('en');
+                        AppStorageScope.setLocale(context, loc).then((_) {
+                          if (mounted) setState(() {});
+                        });
+                      },
+                    ),
                   ),
-                  ButtonSegment<AppLanguage>(
-                    value: AppLanguage.tr,
-                    label: Text(l10n.languageTurkishName),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Text(
+                      l10n.languagePickerSubtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                        height: 1.4,
+                      ),
+                    ),
                   ),
                 ],
-                selected: {widget.storage.loadAppLanguage()},
-                onSelectionChanged: (next) {
-                  if (next.isEmpty) return;
-                  final v = next.first;
-                  final loc = v == AppLanguage.tr
-                      ? const Locale('tr')
-                      : const Locale('en');
-                  AppStorageScope.setLocale(context, loc).then((_) {
-                    if (mounted) setState(() {});
-                  });
-                },
               ),
             ),
+
+            // ODAK
+            const SizedBox(height: 16),
+            _SectionLabel(label: l10n.settingsFocus, theme: theme),
             const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(
-                l10n.languagePickerSubtitle,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                  height: 1.4,
+            _SettingsGroup(
+              tiles: [
+                _SettingsTileData(
+                  icon: Icons.timer_outlined,
+                  title: l10n.settingsSessionChipsTitle,
+                  subtitle: _durationSummary(l10n),
+                  onTap: _openDurationPresets,
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 28),
-            Text(l10n.settingsFocus, style: theme.textTheme.labelMedium),
-            const SizedBox(height: 12),
-            _SettingsTile(
-              icon: Icons.timer_outlined,
-              title: l10n.settingsSessionChipsTitle,
-              subtitle: _durationSummary(l10n),
-              onTap: _openDurationPresets,
+
+            // YASAL
+            const SizedBox(height: 16),
+            _SectionLabel(label: l10n.settingsLegal, theme: theme),
+            const SizedBox(height: 8),
+            _SettingsGroup(
+              tiles: [
+                _SettingsTileData(
+                  icon: Icons.policy_outlined,
+                  title: l10n.settingsPrivacyTitle,
+                  subtitle: l10n.settingsPrivacySubtitle,
+                  onTap: _openPrivacy,
+                ),
+              ],
             ),
-            const SizedBox(height: 28),
-            Text(l10n.settingsLegal, style: theme.textTheme.labelMedium),
-            const SizedBox(height: 12),
-            _SettingsTile(
-              icon: Icons.policy_outlined,
-              title: l10n.settingsPrivacyTitle,
-              subtitle: l10n.settingsPrivacySubtitle,
-              onTap: _openPrivacy,
+
+            // VERİ
+            const SizedBox(height: 16),
+            _SectionLabel(label: l10n.settingsData, theme: theme),
+            const SizedBox(height: 8),
+            _SettingsGroup(
+              tiles: [
+                _SettingsTileData(
+                  icon: Icons.delete_outline_rounded,
+                  title: l10n.settingsResetTitle,
+                  subtitle: l10n.settingsResetSubtitle,
+                  onTap: _confirmReset,
+                  danger: true,
+                ),
+              ],
             ),
-            const SizedBox(height: 28),
-            Text(l10n.settingsData, style: theme.textTheme.labelMedium),
-            const SizedBox(height: 12),
-            _SettingsTile(
-              icon: Icons.delete_outline_rounded,
-              title: l10n.settingsResetTitle,
-              subtitle: l10n.settingsResetSubtitle,
-              onTap: _confirmReset,
-              danger: true,
-            ),
+
             const SizedBox(height: 40),
           ],
         ),
@@ -415,8 +461,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-class _SettingsTile extends StatelessWidget {
-  const _SettingsTile({
+// ---------------------------------------------------------------------------
+// Data holder for a single tile's properties
+// ---------------------------------------------------------------------------
+
+class _SettingsTileData {
+  const _SettingsTileData({
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -431,17 +481,87 @@ class _SettingsTile extends StatelessWidget {
   final VoidCallback? onTap;
   final bool danger;
   final Widget? trailing;
+}
+
+// ---------------------------------------------------------------------------
+// Section label
+// ---------------------------------------------------------------------------
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({required this.label, required this.theme});
+
+  final String label;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: theme.textTheme.labelMedium?.copyWith(
+        color: AppColors.onSurfaceSubtle,
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Group container that wraps multiple tiles with dividers between them
+// ---------------------------------------------------------------------------
+
+class _SettingsGroup extends StatelessWidget {
+  const _SettingsGroup({required this.tiles});
+
+  final List<_SettingsTileData> tiles;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainer,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          children: [
+            for (int i = 0; i < tiles.length; i++) ...[
+              _SettingsTile(data: tiles[i]),
+              if (i < tiles.length - 1)
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: AppColors.borderSubtle,
+                  indent: 52,
+                  endIndent: 0,
+                ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Individual tile — no outer border/container (lives inside _SettingsGroup)
+// ---------------------------------------------------------------------------
+
+class _SettingsTile extends StatelessWidget {
+  const _SettingsTile({required this.data});
+
+  final _SettingsTileData data;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = danger ? AppColors.error : AppColors.onSurfaceVariant;
+    final color = data.danger ? AppColors.error : AppColors.onSurfaceVariant;
 
     final row = Row(
       children: [
         Icon(
-          icon,
-          color: danger ? AppColors.error : AppColors.primary,
+          data.icon,
+          color: data.danger ? AppColors.error : AppColors.primary,
           size: 22,
         ),
         const SizedBox(width: 14),
@@ -450,24 +570,24 @@ class _SettingsTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                data.title,
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: danger ? AppColors.error : AppColors.onSurface,
+                  color: data.danger ? AppColors.error : AppColors.onSurface,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
-                subtitle,
+                data.subtitle,
                 style: theme.textTheme.bodySmall?.copyWith(color: color),
               ),
             ],
           ),
         ),
-        if (trailing != null)
-          trailing!
-        else if (onTap != null)
-          Icon(
+        if (data.trailing != null)
+          data.trailing!
+        else if (data.onTap != null)
+          const Icon(
             Icons.chevron_right_rounded,
             color: AppColors.onSurfaceSubtle,
             size: 22,
@@ -475,31 +595,16 @@ class _SettingsTile extends StatelessWidget {
       ],
     );
 
-    final decorated = Container(
+    final padded = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.outline, width: 1),
-      ),
       child: row,
     );
 
-    if (onTap == null) {
-      return Material(
-        color: AppColors.surfaceContainer,
-        borderRadius: BorderRadius.circular(16),
-        child: decorated,
-      );
-    }
+    if (data.onTap == null) return padded;
 
-    return Material(
-      color: AppColors.surfaceContainer,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: decorated,
-      ),
+    return InkWell(
+      onTap: data.onTap,
+      child: padded,
     );
   }
 }

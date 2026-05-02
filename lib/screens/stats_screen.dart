@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../core/theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/app_formatting.dart';
 import '../features/focus_room/widgets/fr_circle_journey_card.dart';
 import '../models/app_stats.dart';
+import '../models/session_log_entry.dart';
 import '../services/storage_service.dart';
+import '../utils/time_utils.dart';
 import 'session_history_screen.dart';
 
 class StatsScreen extends StatefulWidget {
@@ -69,6 +70,10 @@ class _StatsScreenState extends State<StatsScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
+              Text('HAFTALİK İLERLEME', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 14),
+              _WeeklyChart(sessionLog: widget.storage.loadSessionLog()),
               const SizedBox(height: 24),
               FrCircleJourneyCard(
                 progress: widget.storage.loadFocusTogetherCircleProgress(),
@@ -108,8 +113,7 @@ class _DopamineHero extends StatelessWidget {
     return l10n.dopamineLabel100;
   }
 
-  // Matches the bar color logic on HomeScreen: gold until high, then green.
-  Color _arcColor() {
+  Color _barColor() {
     if (score < 60) return AppColors.primary;
     return AppColors.success;
   }
@@ -118,8 +122,8 @@ class _DopamineHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    final arcColor = _arcColor();
-    final progress = score / 100.0;
+    final barColor = _barColor();
+    final progress = (score / 100.0).clamp(0.0, 1.0);
 
     return Container(
       width: double.infinity,
@@ -130,35 +134,64 @@ class _DopamineHero extends StatelessWidget {
         border: Border.all(color: AppColors.outline, width: 1),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(l10n.dopamineScoreTitle, style: theme.textTheme.labelMedium),
-          const SizedBox(height: 24),
-          CircularPercentIndicator(
-            radius: 90,
-            lineWidth: 10,
-            percent: progress.clamp(0.0, 1.0),
-            animation: true,
-            animationDuration: 900,
-            curve: Curves.easeOutCubic,
-            backgroundColor: AppColors.surfaceContainerHighest,
-            progressColor: arcColor,
-            circularStrokeCap: CircularStrokeCap.round,
-            center: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '$score',
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    color: arcColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(l10n.statsOutOf100, style: theme.textTheme.bodySmall),
-              ],
+          const SizedBox(height: 16),
+          Text(
+            '$score',
+            style: theme.textTheme.displaySmall?.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w700,
             ),
           ),
-
+          const SizedBox(height: 4),
+          Text(
+            'DOPAMIN SKORU',
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: AppColors.onSurfaceVariant,
+              letterSpacing: 1.2,
+            ),
+          ),
           const SizedBox(height: 20),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Stack(
+                children: [
+                  Container(
+                    height: 6,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeOutCubic,
+                    height: 6,
+                    width: constraints.maxWidth * progress,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          barColor.withValues(alpha: 0.7),
+                          barColor,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(3),
+                      boxShadow: [
+                        BoxShadow(
+                          color: barColor.withValues(alpha: 0.45),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          const SizedBox(height: 16),
           Text(
             _description(l10n),
             style: theme.textTheme.bodyMedium,
@@ -170,7 +203,114 @@ class _DopamineHero extends StatelessWidget {
   }
 }
 
-// ── ② Stats Grid ──────────────────────────────────────────────────────────────
+// ── ② Weekly Chart ────────────────────────────────────────────────────────────
+
+class _WeeklyChart extends StatelessWidget {
+  const _WeeklyChart({required this.sessionLog});
+
+  final List<SessionLogEntry> sessionLog;
+
+  static const _maxBarHeight = 80.0;
+  static const _dayLabels = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final today = DateTime.now();
+
+    // Build list of last 7 days (oldest first)
+    final days = List.generate(7, (i) {
+      final d = today.subtract(Duration(days: 6 - i));
+      return d;
+    });
+
+    // Aggregate minutes per dateKey
+    final minutesByKey = <String, int>{};
+    for (final entry in sessionLog) {
+      minutesByKey[entry.dateKey] =
+          (minutesByKey[entry.dateKey] ?? 0) + entry.durationMinutes;
+    }
+
+    // Build per-day minutes
+    final minutesPerDay = days.map((d) {
+      final key = TimeUtils.dateKey(d);
+      return minutesByKey[key] ?? 0;
+    }).toList();
+
+    final maxMinutes = minutesPerDay.fold(0, (a, b) => a > b ? a : b);
+
+    final todayKey = TimeUtils.todayKey;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainer,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.outline, width: 1),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: List.generate(7, (i) {
+          final day = days[i];
+          final key = TimeUtils.dateKey(day);
+          final minutes = minutesPerDay[i];
+          final isToday = key == todayKey;
+          final hasData = minutes > 0;
+          final barHeight = maxMinutes == 0
+              ? 0.0
+              : (minutes / maxMinutes) * _maxBarHeight;
+          final clampedHeight = barHeight.clamp(4.0, _maxBarHeight);
+
+          final barColor = isToday
+              ? AppColors.primary
+              : hasData
+                  ? AppColors.primary.withValues(alpha: 0.35)
+                  : AppColors.surfaceContainerHighest;
+
+          final dayIndex = (day.weekday - 1) % 7; // Mon=0 .. Sun=6
+
+          return Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: _maxBarHeight,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeOutCubic,
+                      width: 20,
+                      height: hasData ? clampedHeight : 4,
+                      decoration: BoxDecoration(
+                        color: barColor,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _dayLabels[dayIndex],
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: isToday
+                        ? AppColors.primary
+                        : AppColors.onSurfaceSubtle,
+                    fontSize: 10,
+                    fontWeight: isToday ? FontWeight.w700 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
+// ── ③ Stats Grid ──────────────────────────────────────────────────────────────
 
 class _StatsGrid extends StatelessWidget {
   const _StatsGrid({required this.stats, required this.l10n});
